@@ -3,8 +3,11 @@ package com.example.productapi.data;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Repository;
+
 import com.example.productapi.model.ProductModel;
 
+@Repository
 public class ProductDataSource {
     private List<ProductModel> dataSource;
     private Integer countId = 0;
