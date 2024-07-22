@@ -16,11 +16,16 @@ public class ProductService {
     private ProductDataSource productDataSource;
 
     /**
-     * Select all items of list
+     * Select all items of the list
      * @return list of ProductModel
      */
     public List<ProductModel> getAllProducts(){
-        return productDataSource.getAllProducts();
+        List<ProductModel> result = productDataSource.getAllProducts();
+        if (result.isEmpty()){
+            return productDataSource.getAllProducts();
+        }else{
+            throw new EmptyDataException();
+        }
     }
 
     /**
@@ -52,10 +57,10 @@ public class ProductService {
 
     /**
      * Delete products
-     * @param product product for delete
+     * @param id id product for delete
      * @return id of product deleted
      */
-    public Optional<Integer> deleteProduct(ProductModel product){
-        return productDataSource.deleteProduct(product);
+    public Optional<Integer> deleteProduct(Integer id){
+        return productDataSource.deleteProduct(id);
     }
 }
