@@ -3,7 +3,6 @@ package com.example.productapi.controller;
 import com.example.productapi.model.ProductModel;
 import com.example.productapi.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -53,9 +52,9 @@ public class ProductController {
      * @param product product to update
      * @return if you find product return optional<id product> or optional empty
      */
-    @PutMapping
-    public Optional<Integer> updateProduct(@PathVariable Integer productId, @RequestBody ProductModel product) {
-        return productService.updateProduct(product);
+    @PutMapping("/{productId}")
+    public Integer updateProduct(@PathVariable Integer productId, @RequestBody ProductModel product) {
+        return productService.updateProduct(productId, product);
     }
 
     /**
@@ -64,8 +63,8 @@ public class ProductController {
      * @param id id of product for delete
      * @return id of product deleted
      */
-    @DeleteMapping
-    public Optional<Integer> deleteProduct(@PathVariable Integer id) {
-        return productService.deleteProduct(id);
+    @DeleteMapping("/{productId}")
+    public Optional<Integer> deleteProduct(@PathVariable Integer productId) {
+        return productService.deleteProduct(productId);
     }
 }

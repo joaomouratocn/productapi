@@ -5,6 +5,10 @@ import java.util.Optional;
 
 import com.example.productapi.util.exceptions.EmptyDataException;
 import com.example.productapi.util.exceptions.IdNotFoundException;
+import com.example.productapi.util.exceptions.InvalidInputDataException;
+import com.example.productapi.util.exceptions.ProductNotFoundExecption;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +29,7 @@ public class ProductService {
         if (result.isEmpty()){
             throw new EmptyDataException();
         }else{
-            return productDataSource.getAllProducts();
+            return result;
         }
     }
 
@@ -49,7 +53,11 @@ public class ProductService {
      * @return id product
      */
     public Integer insertProduct(ProductModel product){
-        return productDataSource.insertProduct(product);
+        if (product.getName() == null || product.getDescription() == null || product.getPrice() == null) {
+            throw new InvalidInputDataException();
+        }else{
+            return productDataSource.insertProduct(product);
+        }
     }
 
     /**
@@ -57,8 +65,17 @@ public class ProductService {
      * @param product product to update
      * @return if you find product return optional<id product> or optional empty
      */
-    public Optional<Integer> updateProduct(ProductModel product){
-        return productDataSource.updateProduct(product);
+    public Integer updateProduct(Integer productId, ProductModel product){
+        Optional<ProductModel> result = productDataSource.getProductById(productId);
+        if (result.isEmpty()){
+            throw new IdNotFoundException();
+        }else{
+            if (product.getName() == null || product.getDescription() == null || product.getPrice() == null) {
+                throw new InvalidInputDataException();
+            }else{
+                return productDataSource.updateProduct(productId, product);
+            }
+        }
     }
 
     /**
@@ -67,6 +84,11 @@ public class ProductService {
      * @return id of product deleted
      */
     public Optional<Integer> deleteProduct(Integer id){
-        return productDataSource.deleteProduct(id);
+        Optional<ProductModel> result = productDataSource.getProductById(id);
+        if (result.isEmpty()){
+            throw new IdNotFoundException();
+        }else{
+            return productDataSource.deleteProduct(id);
+        }
     }
 }

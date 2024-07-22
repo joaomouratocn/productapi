@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 
 import com.example.productapi.model.ProductModel;
+import com.example.productapi.util.exceptions.ProductNotFoundExecption;
 
 @Repository
 public class ProductDataSource {
@@ -44,6 +46,7 @@ public class ProductDataSource {
     public Integer insertProduct(ProductModel product){
         countId++;
         product.setId(countId);
+        dataSource.add(product);
         return countId;
     }
 
@@ -52,13 +55,15 @@ public class ProductDataSource {
      * @param product product to update
      * @return if you find product return optional<id product> or optional empty
      */
-    public Optional<Integer> updateProduct(ProductModel product){
-        int index =  dataSource.indexOf(product);
-        if (index == -1) {
-            return Optional.empty();
+    public Integer updateProduct(Integer prodId, ProductModel product){
+        Optional<ProductModel> productById = getProductById(prodId);
+        if (productById.isPresent()) {
+            product.setId(prodId);
+            int indexOf = dataSource.indexOf(productById.get());
+            dataSource.set(indexOf, product);
+            return prodId;
         }else{
-            dataSource.set(index, product);
-            return Optional.of(product.getId());
+            throw new ProductNotFoundExecption();
         }
     }
 
