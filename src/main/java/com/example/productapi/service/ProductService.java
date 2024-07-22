@@ -3,7 +3,8 @@ package com.example.productapi.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.example.productapi.util.EmptyDataException;
+import com.example.productapi.util.exceptions.EmptyDataException;
+import com.example.productapi.util.exceptions.IdNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +23,9 @@ public class ProductService {
     public List<ProductModel> getAllProducts(){
         List<ProductModel> result = productDataSource.getAllProducts();
         if (result.isEmpty()){
-            return productDataSource.getAllProducts();
-        }else{
             throw new EmptyDataException();
+        }else{
+            return productDataSource.getAllProducts();
         }
     }
 
@@ -34,7 +35,12 @@ public class ProductService {
      * @return if you find return optional with product or optional empty
      */
     public Optional<ProductModel> getProductById(Integer id){
-        return productDataSource.getProductById(id);
+        Optional<ProductModel> result = productDataSource.getProductById(id);
+        if (result.isEmpty()){
+            throw new IdNotFoundException();
+        }else{
+            return result;
+        }
     }
 
     /**
