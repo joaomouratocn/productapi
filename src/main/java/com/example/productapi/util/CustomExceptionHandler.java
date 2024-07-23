@@ -3,7 +3,6 @@ package com.example.productapi.util;
 import com.example.productapi.util.exceptions.EmptyDataException;
 import com.example.productapi.util.exceptions.IdNotFoundException;
 import com.example.productapi.util.exceptions.InvalidInputDataException;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

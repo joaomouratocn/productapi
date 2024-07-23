@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/products")
@@ -31,7 +30,7 @@ public class ProductController {
      * @return if you find return optional with product or optional empty
      */
     @GetMapping("/{id}")
-    public Optional<ProductModel> getProductById(Integer id) {
+    public ProductModel getProductById(Integer id) {
         return productService.getProductById(id);
     }
 
@@ -42,7 +41,7 @@ public class ProductController {
      * @return id product
      */
     @PostMapping
-    public Integer insertProduct(@RequestBody ProductModel product) {
+    public ProductModel insertProduct(@RequestBody ProductModel product) {
         return productService.insertProduct(product);
     }
 
@@ -53,8 +52,8 @@ public class ProductController {
      * @return if you find product return optional<id product> or optional empty
      */
     @PutMapping("/{productId}")
-    public Integer updateProduct(@PathVariable Integer productId, @RequestBody ProductModel product) {
-        return productService.updateProduct(productId, product);
+    public void updateProduct(@PathVariable Integer productId, @RequestBody ProductModel product) {
+        productService.updateProduct(productId, product);
     }
 
     /**
@@ -64,7 +63,7 @@ public class ProductController {
      * @return id of product deleted
      */
     @DeleteMapping("/{productId}")
-    public Optional<Integer> deleteProduct(@PathVariable Integer productId) {
-        return productService.deleteProduct(productId);
+    public void deleteProduct(@PathVariable Integer productId) {
+        productService.deleteProduct(productId);
     }
 }
