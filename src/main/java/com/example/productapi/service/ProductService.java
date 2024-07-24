@@ -1,20 +1,22 @@
 package com.example.productapi.service;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.example.productapi.data.ProductRepository;
+import com.example.productapi.model.ProductModel;
+import com.example.productapi.shared.ProductDTO;
+import com.example.productapi.util.Converters;
 import com.example.productapi.util.exceptions.EmptyDataException;
 import com.example.productapi.util.exceptions.IdNotFoundException;
 import com.example.productapi.util.exceptions.InvalidInputDataException;
-
 import jakarta.persistence.EntityManager;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.productapi.data.ProductRepository;
-import com.example.productapi.model.ProductModel;
+import java.util.List;
+import java.util.Optional;
+
+import static com.example.productapi.util.Converters.toProductDto;
+import static com.example.productapi.util.Converters.toProductModel;
 
 @Service
 @Transactional
@@ -28,74 +30,71 @@ public class ProductService {
 
     /**
      * Select all items of the list
+     *
      * @return list of ProductModel
      */
-    public List<ProductModel> getAllProducts(){
+    public List<ProductDTO> getAllProducts() {
         List<ProductModel> result = productRepository.findAll();
-        if (result.isEmpty()){
+        if (result.isEmpty()) {
             throw new EmptyDataException();
-        }else{
-            return productRepository.findAll();
+        } else {
+            return result.stream()
+                    .map(Converters::toProductDto)
+                    .toList();
         }
     }
 
     /**
      * Get productModel by ID
+     *
      * @param id id for wanted
      * @return if you find return optional with product or optional empty
      */
-    public ProductModel getProductById(Integer id){
+    public ProductDTO getProductById(Integer id) {
         Optional<ProductModel> result = productRepository.findById(id);
-        if (result.isPresent()){
+        if (result.isEmpty()) {
             throw new IdNotFoundException();
-        }else{
-            return result.get();
+        } else {
+            return toProductDto(result.get());
         }
     }
 
     /**
      * Insert product
+     *
      * @param product product as insert
      * @return id product
      */
-    public ProductModel insertProduct(ProductModel product){
+    public ProductDTO insertProduct(ProductDTO product) {
         if (product.getName() == null || product.getDescription() == null || product.getPrice() == null) {
             throw new InvalidInputDataException();
-        }else{
-            return productRepository.save(product);
+        } else {
+            ProductModel converted = toProductModel(product);
+            return toProductDto(productRepository.save(converted));
         }
     }
 
     /**
      * Update product
+     *
      * @param product product to update
-     * @return if you find product return optional<id product> or optional empty
      */
-    public void updateProduct(Integer productId, ProductModel product){
-        ProductModel result = entityManager.find(ProductModel.class, productId);
-        if (result == null){
-            throw new IdNotFoundException();
-        }else{
-            if (product.getName() == null || product.getDescription() == null || product.getPrice() == null) {
-                throw new InvalidInputDataException();
-            }else{
-                result.setName(product.getName());
-                result.setDescription(product.getDescription());
-                result.setPrice(product.getPrice());
-            }
-        }
+    public ProductDTO updateProduct(Integer productId, ProductDTO product) {
+        product.setId(productId);
+        ProductModel converted = toProductModel(product);
+        return toProductDto(productRepository.save(converted));
     }
 
     /**
      * Delete products
+     *
      * @param id id product for delete
-     * @return id of product deleted
      */
-    public void deleteProduct(Integer id){
+    public void deleteProduct(Integer id) {
         Optional<ProductModel> result = productRepository.findById(id);
-        if (result.isEmpty()){
+        if (result.isEmpty()) {
             throw new IdNotFoundException();
-        }else{
+        } else {
             productRepository.delete(result.get());
         }
     }

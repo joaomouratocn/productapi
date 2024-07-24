@@ -1,11 +1,14 @@
-package com.example.productapi.controller;
+package com.example.productapi.view.controller;
 
 import com.example.productapi.model.ProductModel;
 import com.example.productapi.service.ProductService;
+import com.example.productapi.shared.ProductDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 @RequestMapping("/api/products")
@@ -22,6 +25,7 @@ public class ProductController {
     public List<ProductModel> getAllProducts() {
         return productService.getAllProducts();
     }
+    
 
     /**
      * Get productModel by ID
@@ -30,7 +34,7 @@ public class ProductController {
      * @return if you find return optional with product or optional empty
      */
     @GetMapping("/{id}")
-    public ProductModel getProductById(Integer id) {
+    public ProductModel getProductById(@PathVariable Integer id) {
         return productService.getProductById(id);
     }
 
@@ -49,18 +53,16 @@ public class ProductController {
      * Update product
      *
      * @param product product to update
-     * @return if you find product return optional<id product> or optional empty
      */
     @PutMapping("/{productId}")
-    public void updateProduct(@PathVariable Integer productId, @RequestBody ProductModel product) {
+    public ProductDTO updateProduct(@PathVariable Integer productId, @RequestBody ProductModel product) {
         productService.updateProduct(productId, product);
     }
 
     /**
      * Delete products
      *
-     * @param id id of product for delete
-     * @return id of product deleted
+     * @param productId id of product for delete
      */
     @DeleteMapping("/{productId}")
     public void deleteProduct(@PathVariable Integer productId) {

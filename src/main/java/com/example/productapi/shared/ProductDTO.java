@@ -1,25 +1,16 @@
-package com.example.productapi.model;
+package com.example.productapi.shared;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "products")
-public class ProductModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//objeto que sera convertido para Entity e vice e versa
+public class ProductDTO {
     private Integer id;
-    
+
     private String name;
 
     private String Description;
 
     private Double price;
 
-    public ProductModel(Integer id, String name, String description, Double price) {
+    public ProductDTO(Integer id, String name, String description, Double price) {
         this.id = id;
         this.name = name;
         this.Description = description;
@@ -53,6 +44,7 @@ public class ProductModel {
     public Double getPrice() {
         return price;
     }
+
     public void setPrice(Double price) {
         this.price = price;
     }

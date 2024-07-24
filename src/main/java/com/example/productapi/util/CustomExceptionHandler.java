@@ -3,6 +3,8 @@ package com.example.productapi.util;
 import com.example.productapi.util.exceptions.EmptyDataException;
 import com.example.productapi.util.exceptions.IdNotFoundException;
 import com.example.productapi.util.exceptions.InvalidInputDataException;
+import com.example.productapi.util.exceptions.NameNotFoundException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,6 +28,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(InvalidInputDataException.class)
     private ResponseEntity<ErrorMessage> InvalidInputDataException(InvalidInputDataException exception){
+        ErrorMessage errorMessage = new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
+    }
+
+    @ExceptionHandler(NameNotFoundException.class)
+    private ResponseEntity<ErrorMessage> NameNotFoundException(NameNotFoundException exception){
         ErrorMessage errorMessage = new ErrorMessage(HttpStatus.INTERNAL_SERVER_ERROR, exception.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorMessage);
     }
