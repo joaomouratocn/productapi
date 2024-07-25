@@ -1,4 +1,7 @@
 package com.example.productapi.view.model;
+
+import com.example.productapi.shared.ProductDTO;
+
 //modelar aqui modelo de reposta
 public class ProductResponse {
     private Integer id;
@@ -9,6 +12,12 @@ public class ProductResponse {
 
     private Double price;
 
+    public ProductResponse(Integer id, String name, String description, Double price) {
+        this.id = id;
+        this.name = name;
+        this.Description = description;
+        this.price = price;
+    }
 
     public Integer getId() {
         return id;

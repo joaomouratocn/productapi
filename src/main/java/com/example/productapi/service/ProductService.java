@@ -3,11 +3,9 @@ package com.example.productapi.service;
 import com.example.productapi.data.ProductRepository;
 import com.example.productapi.model.ProductModel;
 import com.example.productapi.shared.ProductDTO;
-import com.example.productapi.util.Converters;
 import com.example.productapi.util.exceptions.EmptyDataException;
 import com.example.productapi.util.exceptions.IdNotFoundException;
 import com.example.productapi.util.exceptions.InvalidInputDataException;
-import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,18 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.productapi.util.Converters.toProductDto;
-import static com.example.productapi.util.Converters.toProductModel;
-
 @Service
 @Transactional
 public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
-
-    @Autowired
-    private EntityManager entityManager;
 
     /**
      * Select all items of the list
@@ -39,7 +31,7 @@ public class ProductService {
             throw new EmptyDataException();
         } else {
             return result.stream()
-                    .map(Converters::toProductDto)
+                    .map(ProductModel::toProductDto)
                     .toList();
         }
     }
@@ -55,7 +47,7 @@ public class ProductService {
         if (result.isEmpty()) {
             throw new IdNotFoundException();
         } else {
-            return toProductDto(result.get());
+            return result.get().toProductDto();
         }
     }
 
@@ -69,8 +61,8 @@ public class ProductService {
         if (product.getName() == null || product.getDescription() == null || product.getPrice() == null) {
             throw new InvalidInputDataException();
         } else {
-            ProductModel converted = toProductModel(product);
-            return toProductDto(productRepository.save(converted));
+            ProductModel converted = product.toProductModel();
+            return productRepository.save(converted).toProductDto();
         }
     }
 
@@ -81,8 +73,8 @@ public class ProductService {
      */
     public ProductDTO updateProduct(Integer productId, ProductDTO product) {
         product.setId(productId);
-        ProductModel converted = toProductModel(product);
-        return toProductDto(productRepository.save(converted));
+        ProductModel converted = product.toProductModel();
+        return productRepository.save(converted).toProductDto();
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.example.productapi.model;
 
+import com.example.productapi.shared.ProductDTO;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -18,6 +19,8 @@ public class ProductModel {
     private String Description;
 
     private Double price;
+
+    public ProductModel() {}
 
     public ProductModel(Integer id, String name, String description, Double price) {
         this.id = id;
@@ -53,7 +56,17 @@ public class ProductModel {
     public Double getPrice() {
         return price;
     }
+
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public ProductDTO toProductDto(){
+        return new ProductDTO(
+                this.getId(),
+                this.getName(),
+                this.getDescription(),
+                this.getPrice()
+        );
     }
 }

@@ -1,5 +1,7 @@
 package com.example.productapi.view.model;
 
+import com.example.productapi.shared.ProductDTO;
+
 //modelar aqui modelo de requisicao
 public class ProductRequest {
     private Integer id;
@@ -41,5 +43,14 @@ public class ProductRequest {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public ProductDTO toProductDto(){
+        return new ProductDTO(
+          this.getId(),
+          this.getName(),
+          this.getDescription(),
+          this.getPrice()
+        );
     }
 }

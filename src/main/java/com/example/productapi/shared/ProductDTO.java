@@ -1,5 +1,8 @@
 package com.example.productapi.shared;
 
+import com.example.productapi.model.ProductModel;
+import com.example.productapi.view.model.ProductResponse;
+
 //objeto que sera convertido para Entity e vice e versa
 public class ProductDTO {
     private Integer id;
@@ -47,5 +50,23 @@ public class ProductDTO {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public ProductModel toProductModel(){
+        return new ProductModel(
+                this.getId(),
+                this.getName(),
+                this.getDescription(),
+                this.getPrice()
+        );
+    }
+
+    public ProductResponse toProductResponse(){
+        return new ProductResponse(
+                this.getId(),
+                this.getName(),
+                this.getDescription(),
+                this.getPrice()
+        );
     }
 }
